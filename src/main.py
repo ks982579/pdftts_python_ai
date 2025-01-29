@@ -1,9 +1,13 @@
+# https://pypdf.readthedocs.io/en/stable/modules/PageRange.html
 import pypdf
 # import pyttsx3 as pytts
 # from gtts import gTTS as tts
 # For pulse audio - a WSL to Windows connection
 import os
 import torch
+
+# See MyCroft-AI.gitbook.io/docs
+# https://pypi.org/project/TTS/
 from TTS.api import TTS
 
 def text_to_speech_pytts(text, voice_id=None):
@@ -33,13 +37,20 @@ def text_to_speech_tts(text, lang='en', accent='com'):
     # tts --list_models
     # print(TTS().list_models())
     # tts = TTS("tts_models/en/ljspeech/speedy-speech").to(device)
-    tts = TTS("tts_models/en/jenny/jenny").to(device)
+    tts = TTS(
+        "tts_models/en/jenny/jenny",
+        progress_bar=True,
+        gpu=True
+    ).to(device)
+
+    # bash >> tts --list_models
 
     # text="This is a long sentence that should be a good indication of how well the model does I think. But I don't; know..."
 
 
     mp3 = tts.tts_to_file(
         text=text,
+        # text="This is a small test file to figure out if I want this voice?"
         # speaker_wav="my/cloning/audio.wav",
         # language="en",
         file_path="/mnt/c/Users/KSull/Downloads/test.mp3"
@@ -87,7 +98,7 @@ def read_pdf(filepath, save_file, start=None, end=None):
 if __name__ == '__main__':
     # text_to_speech_tts('Hello, please work nicely')
     text_file = './.artifacts/ch5.txt'
-    if True:
+    if False:
         read_pdf(
             '/mnt/c/Users/KSull/Downloads/Designing Data-Intensive Applications The Big Ideas Behind Reliable, Scalable, and Maintainable Systems ( PDFDrive ).pdf',
             save_file=text_file,
@@ -95,7 +106,7 @@ if __name__ == '__main__':
             end=220
         )
 
-    if False:
+    if True:
         with open(text_file, 'r') as file:
             text = file.read()
 
