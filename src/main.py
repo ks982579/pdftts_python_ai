@@ -45,7 +45,7 @@ def text_to_speech_tts(text, lang='en', accent='com'):
         file_path="/mnt/c/Users/KSull/Downloads/test.mp3"
     )
 
-def read_pdf(filepath, start=None, end=None):
+def read_pdf(filepath, save_file, start=None, end=None):
     with open(filepath, 'rb') as file:
         pdf_reader = pypdf.PdfReader(file)
         if start is not None:
@@ -65,19 +65,20 @@ def read_pdf(filepath, start=None, end=None):
 
             # This is to remove page numbers
             last_nl = tmp.rfind('\n')
+            tmp = tmp if last_nl < 0 else tmp[:last_nl]
+
 
             # Annoying word splits
-            split_word = f"{chr(8208)\n}"
-            tmp.replace(split_word, '')
+            split_word = f"{chr(8208)}\n"
+            tmp = tmp.replace(split_word, '')
             # these are slanted quotes. 
-            tmp.replace(chr(8220), '"')
-            tmp.replace(chr(8221), '"')
+            tmp = tmp.replace(chr(8220), '"')
+            tmp = tmp.replace(chr(8221), '"')
 
-            text += tmp if last_nl < 0 else tmp[:last_nl]
-            text += '\n'
+            text += tmp + '\n'
         
         print(text)
-        with open('ch4.txt', 'w') as file:
+        with open(save_file, 'w') as file:
             file.write(text)
         # print(start)
         # print(end)
@@ -85,13 +86,22 @@ def read_pdf(filepath, start=None, end=None):
 
 if __name__ == '__main__':
     # text_to_speech_tts('Hello, please work nicely')
-    # read_pdf('/mnt/c/Users/KSull/Downloads/Designing Data-Intensive Applications The Big Ideas Behind Reliable, Scalable, and Maintainable Systems ( PDFDrive ).pdf', 133,162)
-    with open('./.artifacts/ch4.txt', 'r') as file:
-        text = file.read()
+    text_file = './.artifacts/ch5.txt'
+    if True:
+        read_pdf(
+            '/mnt/c/Users/KSull/Downloads/Designing Data-Intensive Applications The Big Ideas Behind Reliable, Scalable, and Maintainable Systems ( PDFDrive ).pdf',
+            save_file=text_file,
+            start=167,
+            end=220
+        )
 
-    # Removing new lines
-    text.replace('\n', ' ')
-    # This is —
-    text.replace(chr(8212), '; ')
+    if False:
+        with open(text_file, 'r') as file:
+            text = file.read()
 
-    text_to_speech_tts(text)
+        # Removing new lines
+        text.replace('\n', ' ')
+        # This is —
+        text.replace(chr(8212), '; ')
+
+        text_to_speech_tts(text)
