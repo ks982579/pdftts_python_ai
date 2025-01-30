@@ -111,8 +111,8 @@ if __name__ == '__main__':
             text = file.read()
 
         # Removing new lines
-        text.replace('\n', ' ')
+        text = text.replace('\n', ' ')
         # This is —
-        text.replace(chr(8212), '; ')
+        text = text.replace(chr(8212), '; ')
 
         text_to_speech_tts(text)
