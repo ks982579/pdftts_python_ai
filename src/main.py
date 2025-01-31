@@ -52,6 +52,7 @@ def text_to_speech_tts(text, lang='en', accent='com'):
         text=text,
         # text="This is a small test file to figure out if I want this voice?"
         # speaker_wav="my/cloning/audio.wav",
+        speed=1.25,
         # language="en",
         file_path="/mnt/c/Users/KSull/Downloads/test.mp3"
     )
@@ -97,22 +98,38 @@ def read_pdf(filepath, save_file, start=None, end=None):
 
 if __name__ == '__main__':
     # text_to_speech_tts('Hello, please work nicely')
-    text_file = './.artifacts/ch5.txt'
+    text_file = './.artifacts/ch6.txt'
+    pdf_path='/mnt/c/Users/KSull/Filing Cabinet/Ebooks/comp_sci/OReilly/DesigningDataIntensiveApplicationsBigData.pdf'
     if False:
         read_pdf(
-            '/mnt/c/Users/KSull/Downloads/Designing Data-Intensive Applications The Big Ideas Behind Reliable, Scalable, and Maintainable Systems ( PDFDrive ).pdf',
+            pdf_path,
             save_file=text_file,
-            start=167,
-            end=220
+            start=221,
+            end=241
         )
 
     if True:
         with open(text_file, 'r') as file:
-            text = file.read()
+            # List of strings based on new line
+            lines = file.readlines()
 
-        # Removing new lines
-        text = text.replace('\n', ' ')
-        # This is —
-        text = text.replace(chr(8212), '; ')
+        # Looping backward to check endings
+        for i in range(len(lines) - 1, -1, -1):
+            # Clean up - removing white space and/or new lines.
+            lines[i] = lines[i].strip()
 
+            # This is —
+            lines[i].replace(chr(8212), '; ')
+
+            # This is for pausing after titles and sub titles.
+            if not lines[i].endswith('.'):
+                # If last line... do not look ahead = ERROR
+                if i == len(lines) - 1:
+                    lines[i] += '.'
+                elif lines[i+1][0].isupper():
+                    lines[i] += ';'
+
+            # print(f"{i}: {lines[i]}")
+        
+        text = ' '.join(lines)
         text_to_speech_tts(text)
